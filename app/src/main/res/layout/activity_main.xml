@@ -10,15 +10,15 @@
         android:id="@+id/layoutImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimaryDark"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.example.zoomrotateimageview.ImageLayout
+        <com.example.zoomrotateimageview.RotationImageView
             android:id="@+id/imageLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            app:src="@drawable/haizewang_90"
+            android:src="@drawable/haizewang_90"
+            android:background="@color/colorPrimaryDark"
             android:scaleType="matrix"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

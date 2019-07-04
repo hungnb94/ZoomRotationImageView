@@ -6,6 +6,7 @@ import android.graphics.Matrix
 import android.graphics.PointF
 import android.support.v7.widget.AppCompatImageView
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import kotlin.math.atan2
 import kotlin.math.sqrt
@@ -33,8 +34,8 @@ class RotationImageView @JvmOverloads constructor(
     private var mRotation = 0f
 
 
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
-        if (event == null) return false
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+//        if (event == null) return false
 
         if (scaleType != ScaleType.MATRIX) scaleType = ScaleType.MATRIX
 
@@ -118,33 +119,33 @@ class RotationImageView @JvmOverloads constructor(
         point.set(x / 2, y / 2)
     }
 
-//    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-//        val drawableWidth = drawable?.intrinsicWidth
-//        val drawableHeight = drawable?.intrinsicHeight
-//        if (drawableWidth != null && drawableHeight != null) {
-//            Log.e(TAG, "Custom width and height")
-//            val specWidth = MeasureSpec.getSize(widthMeasureSpec)
-//            val specHeight = MeasureSpec.getSize(heightMeasureSpec)
-//            val ratioW = specWidth / drawableWidth.toFloat()
-//            val ratioH = specHeight / drawableHeight.toFloat()
-//            val targetW: Int
-//            val targetH: Int
-//            if (ratioW > ratioH) {
-//                targetW = (drawableWidth * ratioH).toInt()
-//                targetH = specHeight
-//            } else {
-//                targetW = specWidth
-//                targetH = (drawableHeight * ratioW).toInt()
-//            }
-//            Log.e(TAG, "Drawable: $drawableWidth, $drawableHeight")
-//            Log.e(TAG, "Spec    : $specWidth, $specHeight")
-//            Log.e(TAG, "Target  : $targetW, $targetH")
-//            setMeasuredDimension(targetW, targetH)
-//        } else {
-//            Log.d(TAG, "Default measure")
-//            super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-//        }
-//    }
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val drawableWidth = drawable?.intrinsicWidth
+        val drawableHeight = drawable?.intrinsicHeight
+        if (drawableWidth != null && drawableHeight != null) {
+            Log.e(TAG, "Custom width and height")
+            val specWidth = MeasureSpec.getSize(widthMeasureSpec)
+            val specHeight = MeasureSpec.getSize(heightMeasureSpec)
+            val ratioW = specWidth / drawableWidth.toFloat()
+            val ratioH = specHeight / drawableHeight.toFloat()
+            val targetW: Int
+            val targetH: Int
+            if (ratioW > ratioH) {
+                targetW = (drawableWidth * ratioH).toInt()
+                targetH = specHeight
+            } else {
+                targetW = specWidth
+                targetH = (drawableHeight * ratioW).toInt()
+            }
+            Log.e(TAG, "Drawable: $drawableWidth, $drawableHeight")
+            Log.e(TAG, "Spec    : $specWidth, $specHeight")
+            Log.e(TAG, "Target  : $targetW, $targetH")
+            setMeasuredDimension(targetW, targetH)
+        } else {
+            Log.d(TAG, "Default measure")
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        }
+    }
 
 //    override fun onDraw(canvas: Canvas) {
 //        val mDrawable = drawable ?: return  // couldn't resolve the URI

@@ -22,25 +22,25 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener {
 
         val bitmap = BitmapFactory.decodeResource(resources, R.drawable.haizewang_90)
 
-        btnSave.setOnClickListener {
-            if (ivShowResult.visibility == View.VISIBLE) {
-                ivShowResult.visibility = View.GONE
-                imageLayout.visibility = View.VISIBLE
-            } else {
-                val output = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
-                val canvas = Canvas(output)
-                val matrix = imageLayout.imageView.mMatrix
-                val ratioW = bitmap.width.toFloat() / imageLayout.imageView.width
-                val ratioH = bitmap.height.toFloat() / imageLayout.imageView.height
-                matrix.postScale(ratioW, ratioH)
-                canvas.drawBitmap(bitmap, matrix, null)
-                ivShowResult.visibility = View.VISIBLE
-                imageLayout.visibility = View.GONE
-                ivShowResult.setImageBitmap(output)
-                Log.e(TAG, "Input(${bitmap.width}, ${bitmap.height}, ${getBitmapSize(bitmap)})" +
-                        " vs Output(${output.width}, ${output.height}, ${getBitmapSize(output)})")
-            }
-        }
+//        btnSave.setOnClickListener {
+//            if (ivShowResult.visibility == View.VISIBLE) {
+//                ivShowResult.visibility = View.GONE
+//                imageLayout.visibility = View.VISIBLE
+//            } else {
+//                val output = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
+//                val canvas = Canvas(output)
+//                val matrix = Matrix(imageLayout.imageView.imageMatrix)
+//                val ratioW = bitmap.width.toFloat() / imageLayout.imageView.width
+//                val ratioH = bitmap.height.toFloat() / imageLayout.imageView.height
+//                matrix.postScale(ratioW, ratioH)
+//                canvas.drawBitmap(bitmap, matrix, null)
+//                ivShowResult.visibility = View.VISIBLE
+//                imageLayout.visibility = View.GONE
+//                ivShowResult.setImageBitmap(output)
+//                Log.e(TAG, "Input(${bitmap.width}, ${bitmap.height}, ${getBitmapSize(bitmap)})" +
+//                        " vs Output(${output.width}, ${output.height}, ${getBitmapSize(output)})")
+//            }
+//        }
 
 
 //        layoutImage.post {
@@ -65,25 +65,25 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener {
 //            imageLayout.layoutParams = params
 //        }
 //        imageLayout.setOnTouchListener(this)
-//        btnSave.setOnClickListener {
-//            if (ivShowResult.visibility == View.VISIBLE) {
-//                ivShowResult.visibility = View.GONE
-//                imageLayout.visibility = View.VISIBLE
-//            } else {
-//                val output = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
-//                val canvas = Canvas(output)
-//                val matrix = imageLayout.imageMatrix
-//                val ratioW = bitmap.width.toFloat() / imageLayout.width
-//                val ratioH = bitmap.height.toFloat() / imageLayout.height
-//                matrix.postScale(ratioW, ratioH)
-//                canvas.drawBitmap(bitmap, matrix, null)
-//                ivShowResult.visibility = View.VISIBLE
-//                imageLayout.visibility = View.GONE
-//                ivShowResult.setImageBitmap(output)
-//                Log.e(TAG, "Input(${bitmap.width}, ${bitmap.height}, ${getBitmapSize(bitmap)})" +
-//                        " vs Output(${output.width}, ${output.height}, ${getBitmapSize(output)})")
-//            }
-//        }
+        btnSave.setOnClickListener {
+            if (ivShowResult.visibility == View.VISIBLE) {
+                ivShowResult.visibility = View.GONE
+                imageLayout.visibility = View.VISIBLE
+            } else {
+                val output = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
+                val canvas = Canvas(output)
+                val matrix = Matrix(imageLayout.imageMatrix)
+                val ratioW = bitmap.width.toFloat() / imageLayout.width
+                val ratioH = bitmap.height.toFloat() / imageLayout.height
+                matrix.postScale(ratioW, ratioH)
+                canvas.drawBitmap(bitmap, matrix, null)
+                ivShowResult.visibility = View.VISIBLE
+                imageLayout.visibility = View.GONE
+                ivShowResult.setImageBitmap(output)
+                Log.e(TAG, "Input(${bitmap.width}, ${bitmap.height}, ${getBitmapSize(bitmap)})" +
+                        " vs Output(${output.width}, ${output.height}, ${getBitmapSize(output)})")
+            }
+        }
     }
 
 
