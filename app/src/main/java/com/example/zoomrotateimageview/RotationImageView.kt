@@ -1,6 +1,7 @@
 package com.example.zoomrotateimageview
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Matrix
 import android.graphics.PointF
@@ -12,7 +13,7 @@ import kotlin.math.atan2
 import kotlin.math.sqrt
 
 class RotationImageView @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : AppCompatImageView(context, attrs, defStyleAttr) {
     private val TAG = "TouchImageView"
 
@@ -34,8 +35,8 @@ class RotationImageView @JvmOverloads constructor(
     private var mRotation = 0f
 
 
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-//        if (event == null) return false
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        if (event == null) return false
 
         if (scaleType != ScaleType.MATRIX) scaleType = ScaleType.MATRIX
 
@@ -87,8 +88,8 @@ class RotationImageView @JvmOverloads constructor(
                     val newRot = rotation(event)
                     val diff = newRot - mRotation
                     mMatrix.postRotate(
-                        diff, measuredWidth / 2f,
-                        measuredHeight / 2f
+                            diff, measuredWidth / 2f,
+                            measuredHeight / 2f
                     )
                 }
             }
@@ -123,7 +124,7 @@ class RotationImageView @JvmOverloads constructor(
         val drawableWidth = drawable?.intrinsicWidth
         val drawableHeight = drawable?.intrinsicHeight
         if (drawableWidth != null && drawableHeight != null) {
-            Log.e(TAG, "Custom width and height")
+            Log.d(TAG, "Custom width and height")
             val specWidth = MeasureSpec.getSize(widthMeasureSpec)
             val specHeight = MeasureSpec.getSize(heightMeasureSpec)
             val ratioW = specWidth / drawableWidth.toFloat()
@@ -137,9 +138,6 @@ class RotationImageView @JvmOverloads constructor(
                 targetW = specWidth
                 targetH = (drawableHeight * ratioW).toInt()
             }
-            Log.e(TAG, "Drawable: $drawableWidth, $drawableHeight")
-            Log.e(TAG, "Spec    : $specWidth, $specHeight")
-            Log.e(TAG, "Target  : $targetW, $targetH")
             setMeasuredDimension(targetW, targetH)
         } else {
             Log.d(TAG, "Default measure")
@@ -147,19 +145,19 @@ class RotationImageView @JvmOverloads constructor(
         }
     }
 
-//    override fun onDraw(canvas: Canvas) {
-//        val mDrawable = drawable ?: return  // couldn't resolve the URI
-//
-////        if (imageMatrix == null) {
-////            mDrawable.draw(canvas)
-////        } else {
-////        val saveCount = canvas.saveCount
-//        canvas.save()
-//
-//        canvas.concat(mMatrix)
-//        mDrawable.draw(canvas)
-////        canvas.restoreToCount(saveCount)
-////        }
-//    }
+    fun getOutputBitmap(): Bitmap {
+        val drawable = drawable
+        val drawableW = drawable.intrinsicWidth
+        val drawableH = drawable.intrinsicHeight
+        val bitmap = Bitmap.createBitmap(drawableW, drawableH, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        val matrix = Matrix(imageMatrix)
+        val ratioW = drawableW.toFloat() / width
+        val ratioH = drawableH.toFloat() / height
+        matrix.postScale(ratioW, ratioH)
+        canvas.concat(matrix)
+        drawable.draw(canvas)
+        return bitmap
+    }
 
 }

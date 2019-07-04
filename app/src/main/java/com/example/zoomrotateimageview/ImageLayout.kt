@@ -79,14 +79,6 @@ class ImageLayout @JvmOverloads constructor(
         imageView.setImageURI(uri)
     }
 
-//    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-//        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-//        if (imageWidth != 0 && imageHeight != 0) {
-//            Log.e(TAG, "update from measure")
-//            updateLayoutParam(imageWidth, imageHeight)
-//        }
-//    }
-
     private fun updateLayoutParam(imgWidth: Int, imgHeight: Int) {
         imageWidth = imgWidth
         imageHeight = imgHeight
