@@ -12,6 +12,8 @@ import android.util.Log
 import android.view.MotionEvent
 import com.bumptech.glide.Glide
 import kotlin.math.atan2
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.sqrt
 
 class RotationImageView @JvmOverloads constructor(
@@ -151,23 +153,8 @@ class RotationImageView @JvmOverloads constructor(
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val drawableWidth = drawable?.intrinsicWidth
         val drawableHeight = drawable?.intrinsicHeight
-        if (autoScale && drawableWidth != null && drawableHeight != null) {
-            Log.d(TAG, "Custom width and height")
-            val specWidth = MeasureSpec.getSize(widthMeasureSpec)
-            val specHeight = MeasureSpec.getSize(heightMeasureSpec)
-            val ratioW = specWidth / drawableWidth.toFloat()
-            val ratioH = specHeight / drawableHeight.toFloat()
-            val targetW: Int
-            val targetH: Int
-            if (ratioW > ratioH) {
-                targetW = (drawableWidth * ratioH).toInt()
-                targetH = specHeight
-            } else {
-                targetW = specWidth
-                targetH = (drawableHeight * ratioW).toInt()
-            }
-            setMeasuredDimension(targetW, targetH)
-        } else if (targetWidth != 0 && targetHeight != 0) {
+        if (targetWidth != 0 && targetHeight != 0) {
+            Log.d(TAG, "Set dimension base on target width & target height")
             val specWidth = MeasureSpec.getSize(widthMeasureSpec)
             val specHeight = MeasureSpec.getSize(heightMeasureSpec)
 
@@ -182,6 +169,22 @@ class RotationImageView @JvmOverloads constructor(
             } else {
                 targetW = specWidth
                 targetH = (this.targetHeight * ratioW).toInt()
+            }
+            setMeasuredDimension(targetW, targetH)
+        } else if (autoScale && drawableWidth != null && drawableHeight != null) {
+            Log.d(TAG, "Auto scale dimension")
+            val specWidth = MeasureSpec.getSize(widthMeasureSpec)
+            val specHeight = MeasureSpec.getSize(heightMeasureSpec)
+            val ratioW = specWidth / drawableWidth.toFloat()
+            val ratioH = specHeight / drawableHeight.toFloat()
+            val targetW: Int
+            val targetH: Int
+            if (ratioW > ratioH) {
+                targetW = (drawableWidth * ratioH).toInt()
+                targetH = specHeight
+            } else {
+                targetW = specWidth
+                targetH = (drawableHeight * ratioW).toInt()
             }
             setMeasuredDimension(targetW, targetH)
         } else {
@@ -255,18 +258,26 @@ class RotationImageView @JvmOverloads constructor(
         val dwidth = getDrawable().intrinsicWidth
         val dheight = getDrawable().intrinsicHeight
 
+        val width = width
+        val height = height
+        Log.e(TAG, "Target: ($targetWidth, $targetHeight), Auto: $autoScale")
+
         val targetW: Int
         val targetH: Int
         if (targetWidth == 0 || targetHeight == 0) {
-            targetW = drawable.intrinsicWidth
-            targetH = drawable.intrinsicHeight
+            if (autoScale) {
+                targetW = drawable.intrinsicWidth
+                targetH = drawable.intrinsicHeight
+            } else {
+                val ratio = max(drawable.intrinsicWidth.toFloat() / width,
+                        drawable.intrinsicHeight.toFloat() / height)
+                targetW = (width * ratio).toInt()
+                targetH = (height * ratio).toInt()
+            }
         } else {
             targetW = targetWidth
             targetH = targetHeight
         }
-
-        val width = width
-        val height = height
 
         val bitmap = Bitmap.createBitmap(targetW, targetH, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)

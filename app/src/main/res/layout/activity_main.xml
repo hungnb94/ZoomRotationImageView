@@ -20,6 +20,8 @@
             android:src="@drawable/haizewang_90"
             android:background="@color/colorPrimary"
             app:autoScale="true"
+            app:targetWidth="300dp"
+            app:targetHeight="400dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
