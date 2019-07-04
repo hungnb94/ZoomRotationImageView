@@ -13,13 +13,13 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.example.zoomrotateimageview.RotationImageView
-            android:id="@+id/imageLayout"
+            android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:src="@drawable/haizewang_90"
             android:background="@color/colorPrimary"
-            android:scaleType="matrix"
+            app:autoScale="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

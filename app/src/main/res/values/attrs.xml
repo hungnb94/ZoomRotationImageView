@@ -3,4 +3,10 @@
     <declare-styleable name="ImageLayout">
         <attr name="src" format="reference" />
     </declare-styleable>
+    <declare-styleable name="RotationImageView">
+        <attr name="srcImage" format="reference" />
+        <attr name="autoScale" format="boolean" />
+        <attr name="targetWidth" format="dimension" />
+        <attr name="targetHeight" format="dimension" />
+    </declare-styleable>
 </resources>
