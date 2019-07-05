@@ -281,11 +281,9 @@ class RotationImageView @JvmOverloads constructor(
 
         val bitmap = Bitmap.createBitmap(targetW, targetH, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
-        val matrix = Matrix()
+        val matrix = Matrix(imageMatrix)
         //First scale down to current visible drawable
-        matrix.postScale(dwidth / imgWidth.toFloat(), dheight / imgHeight.toFloat())
-        //Apply current transform of image
-        matrix.postConcat(imageMatrix)
+        matrix.preScale(dwidth / imgWidth.toFloat(), dheight / imgHeight.toFloat())
 
         //Scale to target size
         val ratioW = targetW.toFloat() / width
