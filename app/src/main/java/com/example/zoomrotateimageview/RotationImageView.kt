@@ -11,19 +11,17 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
 import com.bumptech.glide.Glide
-import kotlin.math.atan2
-import kotlin.math.max
-import kotlin.math.min
-import kotlin.math.sqrt
+import kotlin.math.*
 
 class RotationImageView @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : AppCompatImageView(context, attrs, defStyleAttr) {
     private val TAG = "TouchImageView"
 
     // These matrices will be used to move and zoom image
     var mMatrix = Matrix()
     private var mSavedMatrix = Matrix()
+    private val mMatrixValues = FloatArray(9)
 
     // We can be in one of these 3 states
     val NONE = 0
@@ -46,6 +44,9 @@ class RotationImageView @JvmOverloads constructor(
     private var srcImg: Drawable? = null
     private var targetWidth = 0
     private var targetHeight = 0
+
+    var maxScale = 5f
+    var minScale = 0.2f
 
     init {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.RotationImageView)
@@ -111,14 +112,22 @@ class RotationImageView @JvmOverloads constructor(
                 mMatrix.set(mSavedMatrix)
                 if (newDist > 10f) {
                     scale = newDist / mOldDistance
-                    mMatrix.postScale(scale, scale, mMid.x, mMid.y)
+                    if (scale < 1f) {
+                        if (getScale() > minScale) {
+                            mMatrix.postScale(scale, scale, mMid.x, mMid.y)
+                        }
+                    } else {
+                        if (getScale() < maxScale) {
+                            mMatrix.postScale(scale, scale, mMid.x, mMid.y)
+                        }
+                    }
                 }
                 if (mLastEvent != null) {
                     val newRot = rotation(event)
                     val diff = newRot - mRotation
                     mMatrix.postRotate(
-                            diff, measuredWidth / 2f,
-                            measuredHeight / 2f
+                        diff, measuredWidth / 2f,
+                        measuredHeight / 2f
                     )
                 }
             }
@@ -128,6 +137,27 @@ class RotationImageView @JvmOverloads constructor(
         if (!isMatrixScaleType) scaleType = ScaleType.MATRIX
 
         return true // indicate event was handled
+    }
+
+    private fun getScale(): Float {
+        return sqrt(
+            (getValue(mMatrix, Matrix.MSCALE_X).toDouble().pow(2.0).toFloat() + getValue(
+                mMatrix,
+                Matrix.MSKEW_Y
+            ).toDouble().pow(2.0).toFloat()).toDouble()
+        ).toFloat()
+    }
+
+    /**
+     * Helper method that 'unpacks' a Matrix and returns the required value
+     *
+     * @param matrix     Matrix to unpack
+     * @param whichValue Which value from Matrix.M* to return
+     * @return returned value
+     */
+    private fun getValue(matrix: Matrix, whichValue: Int): Float {
+        matrix.getValues(mMatrixValues)
+        return mMatrixValues[whichValue]
     }
 
     private fun rotation(event: MotionEvent): Float {
@@ -219,9 +249,9 @@ class RotationImageView @JvmOverloads constructor(
     fun setImage(drawable: Drawable?) {
 //        setImageDrawable(drawable)
         Glide.with(this)
-                .load(drawable)
-                .centerInside()
-                .into(this)
+            .load(drawable)
+            .centerInside()
+            .into(this)
 
         srcImg = drawable
         if (drawable != null) {
@@ -269,8 +299,10 @@ class RotationImageView @JvmOverloads constructor(
                 targetW = drawable.intrinsicWidth
                 targetH = drawable.intrinsicHeight
             } else {
-                val ratio = max(drawable.intrinsicWidth.toFloat() / width,
-                        drawable.intrinsicHeight.toFloat() / height)
+                val ratio = max(
+                    drawable.intrinsicWidth.toFloat() / width,
+                    drawable.intrinsicHeight.toFloat() / height
+                )
                 targetW = (width * ratio).toInt()
                 targetH = (height * ratio).toInt()
             }
